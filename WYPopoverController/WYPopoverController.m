@@ -155,6 +155,11 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     
     method_exchangeImplementations(original, swizzle);
     
+//    original = class_getInstanceMethod(self, @selector(popViewControllerAnimated:));
+//    swizzle = class_getInstanceMethod(self, @selector(sizzled_popViewControllerAnimated:));
+//    
+//    method_exchangeImplementations(original, swizzle);
+    
     original = class_getInstanceMethod(self, @selector(setViewControllers:animated:));
     swizzle = class_getInstanceMethod(self, @selector(sizzled_setViewControllers:animated:));
     
@@ -226,6 +231,29 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
     }
     
     [self sizzled_pushViewController:aViewController animated:aAnimated];
+    
+    if (self.isEmbedInPopover)
+    {
+        CGSize contentSize = [self contentSize:aViewController];
+        [self setContentSize:contentSize];
+    }
+}
+
+- (void)sizzled_popViewControllerAnimated:(BOOL)aAnimated
+{
+    UIViewController *aViewController = self.viewControllers[self.viewControllers.count - 2];
+    if (self.isEmbedInPopover)
+    {
+#ifdef WY_BASE_SDK_7_ENABLED
+        if ([aViewController respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+            aViewController.edgesForExtendedLayout = UIRectEdgeNone;
+        }
+#endif
+        CGSize contentSize = [self contentSize:aViewController];
+        [self setContentSize:contentSize];
+    }
+    
+    [self sizzled_popViewControllerAnimated:aAnimated];
     
     if (self.isEmbedInPopover)
     {
@@ -986,6 +1014,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
         
         self.autoresizesSubviews = NO;
         self.backgroundColor = [UIColor clearColor];
+        self.clipsToBounds = NO;
         
         self.arrowDirection = WYPopoverArrowDirectionDown;
         self.arrowOffset = 0;
@@ -1245,7 +1274,7 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
             CGPathMoveToPoint(outerPathRef, NULL, origin.x, origin.y);
             
             CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset, CGRectGetMinY(outerRect) - arrowHeight);
-            CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset + arrowBase / 2, CGRectGetMinY(outerRect));
+            CGPathAddLineToPoint(outerPathRef, NULL, CGRectGetMidX(outerRect) + arrowOffset, CGRectGetMinY(outerRect));
             
             CGPathAddArcToPoint(outerPathRef, NULL, CGRectGetMaxX(outerRect), CGRectGetMinY(outerRect), CGRectGetMaxX(outerRect), CGRectGetMaxY(outerRect), (arrowOffset >= 0) ? reducedOuterCornerRadius : outerCornerRadius);
             CGPathAddArcToPoint(outerPathRef, NULL, CGRectGetMaxX(outerRect), CGRectGetMaxY(outerRect), CGRectGetMinX(outerRect), CGRectGetMaxY(outerRect), outerCornerRadius);
