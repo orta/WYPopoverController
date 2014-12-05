@@ -2543,8 +2543,6 @@ static WYPopoverTheme *defaultTheme_ = nil;
     } else {
         backgroundView.frame = containerFrame;
     }
-    
-    WY_LOG(@"popoverContainerView.frame = %@", NSStringFromCGRect(backgroundView.frame));
 }
 
 - (void)dismissPopoverAnimated:(BOOL)aAnimated
