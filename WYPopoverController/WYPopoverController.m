@@ -1570,7 +1570,6 @@ static CGFloat edgeSizeFromCornerRadius(CGFloat cornerRadius) {
     WYPopoverArrowDirection  permittedArrowDirections;
     BOOL                     animated;
     BOOL                     isListeningNotifications;
-    BOOL                     isInterfaceOrientationChanging;
     __weak UIBarButtonItem  *barButtonItem;
     CGRect                   keyboardRect;
     
@@ -3090,15 +3089,11 @@ static CGPoint WYPointRelativeToOrientation(CGPoint origin, CGSize size, UIInter
 
 - (void)didChangeStatusBarOrientation:(NSNotification *)notification
 {
-    isInterfaceOrientationChanging = YES;
+    backgroundView.alpha = 0;
 }
 
 - (void)didChangeDeviceOrientation:(NSNotification *)notification
 {
-    if (isInterfaceOrientationChanging == NO) return;
-    
-    isInterfaceOrientationChanging = NO;
-    
     if ([viewController isKindOfClass:[UINavigationController class]])
     {
         UINavigationController* navigationController = (UINavigationController*)viewController;
@@ -3134,6 +3129,10 @@ static CGPoint WYPointRelativeToOrientation(CGPoint origin, CGSize size, UIInter
     }
     
     [self positionPopover:NO];
+    
+    [UIView animateWithDuration:0.2 delay:0.4f options:0 animations:^{
+        backgroundView.alpha = 1;
+    } completion:nil];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification
