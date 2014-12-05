@@ -2790,7 +2790,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
     [self dismissPopoverAnimated:aAnimated
                          options:aOptions
                       completion:completion
-                    callDelegate:NO];
+                    callDelegate:YES];
 }
 
 - (void)dismissPopoverAnimated:(BOOL)aAnimated
