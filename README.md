@@ -1,6 +1,8 @@
 WYPopoverController
 ===================
 
+*[This fork](https://github.com/sammcewan/WYPopoverController) is being actively maintained. The [original one](https://github.com/nicolaschengdev/WYPopoverController) seems to have been abandoned.*
+
 WYPopoverController is for the presentation of content in popover on iPhone / iPad devices. Very customizable.
 
 ### Screenshots
@@ -30,29 +32,33 @@ WYPopoverController is for the presentation of content in popover on iPhone / iP
 
 | Property                      | Type           | Default value (iOS 6)  | Default value (iOS 7)  |
 | ----------------------------- | -------------- | ---------------------: | ---------------------: |
+| usesRoundedArrow              | `BOOL`         |                    YES |                    YES |
 | tintColor                     | `UIColor`      |                  *nil* |                  *nil* |
-| arrowBase                     | `CGFloat`      |                     42 |                     25 |
-| arrowHeight                   | `CGFloat`      |                     18 |                     13 |
-| borderWidth                   | `CGFloat`      |                      6 |                      0 |
-| outerCornerRadius             | `CGFloat`      |                      8 |                      5 |
-| innerCornerRadius             | `CGFloat`      |                      6 |                      0 |
+| arrowBase                     | `NSUInteger`   |                     42 |                     25 |
+| arrowHeight                   | `NSUInteger`   |                     18 |                     13 |
+| borderWidth                   | `NSUInteger`   |                      6 |                      0 |
+| outerCornerRadius             | `NSUInteger`   |                      8 |                      5 |
+| innerCornerRadius             | `NSUInteger`   |                      6 |                      0 |
 | viewContentInsets             | `UIEdgeInsets` |         { 3, 0, 0, 0 } |       UIEdgeInsetsZero |
 | fillTopColor                  | `UIColor`      | 	            #373f47ff | 	         #f4f4f4ff |
 | fillBottomColor               | `UIColor`      |              #3b434cff |              #f4f4f4ff |
 | glossShadowColor              | `UIColor`      |              #c3c5c77f |           #transparent |
-| glossShadowBlurRadius         | `CGFloat`      |                      0 |                      0 |
+| glossShadowBlurRadius         | `NSUInteger`   |                      0 |                      0 |
 | glossShadowOffset             | `CGSize`       |             { 0, 1.5 } |             CGSizeZero |
 | outerShadowColor              | `UIColor`      |              #000000bf |           #transparent |
-| outerShadowBlurRadius         | `CGFloat`      |                      8 |                      0 |
+| outerShadowBlurRadius         | `NSUInteger`   |                      8 |                      0 |
 | outerShadowOffset             | `CGSize`       |               { 0, 2 } |             CGSizeZero |
 | innerShadowColor              | `UIColor`      | 			    #000000bf | 		  #transparent |
-| innerShadowBlurRadius         | `CGFloat`      |                      2 |                      0 |
+| innerShadowBlurRadius         | `NSUInteger`   |                      2 |                      0 |
 | innerShadowOffset             | `CGSize`       |               { 0, 1 } |             CGSizeZero |
-| minOuterCornerRadius          | `CGFloat`      |  		            0 |  		             0 |
+| minOuterCornerRadius          | `NSUInteger`   |  		            0 |  		             0 |
 | innerStrokeColor              | `UIColor`      |              #262c31ff |           #transparent |
 | outerStrokeColor              | `UIColor`      |              #262c31ff |           #transparent |
+| dimsBackgroundViewsTintColor  | `BOOL`         |                    YES |                    YES |
 
 ##### Arrow & Border
+
+`usesRoundedArrow` (enabled by default) produces a nicely curved arrow. Set it to `NO` to revert to the old pointy arrow.
 
 ![](https://raw.github.com/nicolaschengdev/WYPopoverController/master/screenshots/appearance/small/wypopover_arrowbase.png "arrowBase: 42") , ![](https://raw.github.com/nicolaschengdev/WYPopoverController/master/screenshots/appearance/small/wypopover_arrowheight.png "arrowHeight: 18") , ![](https://raw.github.com/nicolaschengdev/WYPopoverController/master/screenshots/appearance/small/wypopover_borderwidth.png "borderWidth: 6")
 
@@ -75,6 +81,10 @@ WYPopoverController is for the presentation of content in popover on iPhone / iP
 ##### Inner
 
 ![](https://raw.github.com/nicolaschengdev/WYPopoverController/master/screenshots/appearance/small/wypopover_innershadowcolor.png "innerShadowColor: #c3045e, innerShadowOffset: {0, 1}, innerShadowBlurRadius: 2") , ![](https://raw.github.com/nicolaschengdev/WYPopoverController/master/screenshots/appearance/small/wypopover_innershadowoffset_0--1.png "innerShadowColor: #c3045e, innerShadowOffset: {0, -1}, innerShadowBlurRadius: 2") , ![](https://raw.github.com/nicolaschengdev/WYPopoverController/master/screenshots/appearance/small/wypopover_innershadowblurradius_0.png "innerShadowColor: #c3045e, innerShadowOffset: {0, 1}, innerShadowBlurRadius: 0")
+
+##### Tint
+
+`dimsBackgroundViewsTintColor` controls whether views behind the overlay have their tint color dimmed.
 
 ### Works like UIPopoverController
 
@@ -150,13 +160,13 @@ WYPopoverController uses ARC.
 
 #### Cocoapods
 
-Add this line `pod 'WYPopoverController', '~> 0.2.0'` to your PodFile.
+Add this line `pod 'WYPopoverController', '~> 0.3.7'` to your PodFile.
 
 Your PodFile should look like :
 
 ```Ruby
 platform :ios, '6.0'
-pod 'WYPopoverController', '~> 0.2.2'
+pod 'WYPopoverController', '~> 0.3.7'
 ```
 
 To use the `master` branch of the repo :
@@ -220,16 +230,20 @@ In the implementation of your view controller
 ##### Appearance (Tint Color)
 
 ```objective-c
-WYPopoverBackgroundView* appearance = [WYPopoverBackgroundView appearance];
+[WYPopoverController setDefaultTheme:[WYPopoverTheme theme]];
+
+WYPopoverBackgroundView *appearance = [WYPopoverBackgroundView appearance];
 [appearance setTintColor:[UIColor orangeColor]];
 ```
 
 ##### Appearance (Flat Popover)
 
 ```objective-c
-UIColor* greenColor = [UIColor colorWithRed:26.f/255.f green:188.f/255.f blue:156.f/255.f alpha:1];
+UIColor *greenColor = [UIColor colorWithRed:26.f/255.f green:188.f/255.f blue:156.f/255.f alpha:1];
 
-WYPopoverBackgroundView* popoverAppearance = [WYPopoverBackgroundView appearance];
+[WYPopoverController setDefaultTheme:[WYPopoverTheme theme]];
+
+WYPopoverBackgroundView *popoverAppearance = [WYPopoverBackgroundView appearance];
         
 [popoverAppearance setOuterCornerRadius:4];
 [popoverAppearance setOuterShadowBlurRadius:0];
@@ -345,3 +359,4 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
