@@ -189,15 +189,17 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 + (void)load {
   Method original, swizzle;
 
-  original = class_getInstanceMethod(self, @selector(pushViewController:animated:));
-  swizzle = class_getInstanceMethod(self, @selector(sizzled_pushViewController:animated:));
+  // Don't swizzle, we dont need it
 
-  method_exchangeImplementations(original, swizzle);
+  // original = class_getInstanceMethod(self, @selector(pushViewController:animated:));
+  // swizzle = class_getInstanceMethod(self, @selector(sizzled_pushViewController:animated:));
 
-  original = class_getInstanceMethod(self, @selector(setViewControllers:animated:));
-  swizzle = class_getInstanceMethod(self, @selector(sizzled_setViewControllers:animated:));
+  // method_exchangeImplementations(original, swizzle);
 
-  method_exchangeImplementations(original, swizzle);
+  // original = class_getInstanceMethod(self, @selector(setViewControllers:animated:));
+  // swizzle = class_getInstanceMethod(self, @selector(sizzled_setViewControllers:animated:));
+
+  // method_exchangeImplementations(original, swizzle);
 }
 
 - (BOOL)wy_isEmbedInPopover {
@@ -302,23 +304,25 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 @implementation UIViewController (WYPopover)
 
 + (void)load {
-  Method original, swizzle;
 
-#pragma clang diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated"
-  original = class_getInstanceMethod(self, @selector(setContentSizeForViewInPopover:));
-  swizzle = class_getInstanceMethod(self, @selector(sizzled_setContentSizeForViewInPopover:));
-  method_exchangeImplementations(original, swizzle);
-#pragma clang diagnostic pop
+//  Don't swizzle, we dont need it 
+//   Method original, swizzle;
 
-#ifdef WY_BASE_SDK_7_ENABLED
-  original = class_getInstanceMethod(self, @selector(setPreferredContentSize:));
-  swizzle = class_getInstanceMethod(self, @selector(sizzled_setPreferredContentSize:));
+// #pragma clang diagnostic push
+// #pragma GCC diagnostic ignored "-Wdeprecated"
+//   original = class_getInstanceMethod(self, @selector(setContentSizeForViewInPopover:));
+//   swizzle = class_getInstanceMethod(self, @selector(sizzled_setContentSizeForViewInPopover:));
+//   method_exchangeImplementations(original, swizzle);
+// #pragma clang diagnostic pop
 
-  if (original != NULL) {
-    method_exchangeImplementations(original, swizzle);
-  }
-#endif
+// #ifdef WY_BASE_SDK_7_ENABLED
+//   original = class_getInstanceMethod(self, @selector(setPreferredContentSize:));
+//   swizzle = class_getInstanceMethod(self, @selector(sizzled_setPreferredContentSize:));
+
+//   if (original != NULL) {
+//     method_exchangeImplementations(original, swizzle);
+//   }
+// #endif
 }
 
 - (void)sizzled_setContentSizeForViewInPopover:(CGSize)aSize {
